@@ -1,4 +1,5 @@
 import express from "express";
+import fs from "fs";
 import {
   getMultipleTickerPrice,
   getAccountInfo,
@@ -67,6 +68,22 @@ const BOTS = [
     trade_counter: 0,
   },
 ];
+
+function readWriteSync(text, rewrite = false, file = "./logs.txt") {
+  var data = fs.readFileSync(file, "utf-8");
+  var newValue = "";
+
+  if (rewrite) {
+    newValue = text;
+  } else {
+    if (data.length > 0) newValue = data + "\n" + "[" + new Date() + "]" + text;
+    else newValue = text;
+  }
+
+  fs.writeFileSync(file, newValue, "utf-8");
+
+  //console.log("Log saved!");
+}
 
 function getGmtTime() {
   const datetime = new Date();
@@ -146,6 +163,7 @@ function newCycle() {
     })
     .catch((error) => console.log(error));
   console.log(BOTS);
+  readWriteSync(JSON.stringify(BOTS));
 }
 
 function deal(coins) {
@@ -167,7 +185,7 @@ function deal(coins) {
         bot.has_buy = true;
         bot.bought_counter++;
 
-        //readWriteSync("logs.txt", obterLog(1, price, element), false);
+        readWriteSync("BOUGHT" + " - " + price + " - " + bot.coin_pair);
         console.log("BOUGHT", price, bot);
       }
 
@@ -180,15 +198,15 @@ function deal(coins) {
         let current_among_money = bot.amount_crypto * price;
         bot.amount_crypto -= bot.amount_crypto;
         bot.amount_money += current_among_money;
-        element.has_sell = true;
+        bot.has_sell = true;
         bot.sell_counter++;
 
-        //readWriteSync("logs.txt", obterLog(2, price, element), false);
+        readWriteSync("SOLD" + " - " + price + " - " + bot.coin_pair);
         console.log("SOLD", price, bot);
       }
     } else {
       //readWriteSync("logs.txt", "PRICE EQUAL OR UNDER ZERO", false);
-      console.log("PRICE EQUAL OR UNDER ZERO", price);
+      readWriteSync("PRICE EQUAL OR UNDER ZERO" + price);
     }
   });
 }
