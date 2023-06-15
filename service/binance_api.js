@@ -11,8 +11,8 @@ const ORDER_URL_BASE = "api/v3/order";
 
 const TICKER_URL_BASE = "api/v3/ticker/price";
 
-const apiKey = process.env.API_KEY; //"DGGYgObaAkg1Uia3vcMWhbSKid6P4cFTncTGVbxrFlHCbae8Ku7TtfsWqg9dF9ks";
-const apiSecret = process.env.SECRET_KEY; //"H7apSut4o7F0imKeQhbiOwpUB8IcTdhRe2jX9IEi6IDwy6xDM3I2A48poQkZTBiz"
+const apiKey = process.env.API_KEY;
+const apiSecret = process.env.SECRET_KEY;
 
 function publicCall(path, data, data_parsed = false, method = "GET") {
   let parsed_data = data;
